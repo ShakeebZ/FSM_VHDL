@@ -9,14 +9,14 @@ entity Testing is
     );
 end Testing;
 
-architecture rtl of test is
+architecture rtl of Testing is
 component Custom7Seg
     port(
-    D : IN STD_LOGIC_VECTOR(3 downto 0);
+    D : IN STD_LOGIC_VECTOR(4 downto 0);
     Y : OUT STD_LOGIC_VECTOR(6 downto 0)
     );
 end component;
 begin
-    DUT1 : Custom7Seg Port Map(D => SW(3 downto 0), Y => HEX0);
+    DUT1 : Custom7Seg Port Map(D => SW(4 downto 0), Y => HEX0);
     
 end architecture;
