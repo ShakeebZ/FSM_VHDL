@@ -2,14 +2,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity Testing is
+entity Custom7SegTesting is
     port (
         SW : in std_logic_vector(17 downto 0);
         HEX0 : OUT std_logic_vector(6 downto 0)
     );
-end Testing;
+end Custom7SegTesting;
 
-architecture rtl of Testing is
+architecture rtl of Custom7SegTesting is
 component Custom7Seg
     port(
     D : IN STD_LOGIC_VECTOR(4 downto 0);
