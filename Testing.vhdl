@@ -9,7 +9,7 @@ entity Testing is
     );
 end Testing;
 
-architecture rtl of test is
+architecture rtl of Testing is
 component Custom7Seg
     port(
     D : IN STD_LOGIC_VECTOR(3 downto 0);
