@@ -11,7 +11,7 @@ end Custom7Seg;
 
 architecture behaviour of Custom7Seg is
 begin
-    Y <= "1110111" WHEN D = "00000" ELSE --Bottom Line
+    Y <= "1110111" WHEN (D = "00000") ELSE --Bottom Line
         "0111111" WHEN D = "00001" ELSE -- Middle Line
         "1111110" WHEN D = "00010" ELSE -- Top Line
         "1101111" WHEN D = "00011" ELSE -- LeftBot Line
@@ -36,7 +36,7 @@ begin
         "1000011" WHEN D = "10100" ELSE -- Letter W leftside
         "1110001" WHEN D = "10101" ELSE -- Letter W rightside
 
-        "00010001" WHEN D = "10110" ELSE -- Letter y
-        "1111111";
+        "0010001" WHEN D = "10110" ELSE -- Letter y
+        "0000000";
 
 end architecture behaviour;
