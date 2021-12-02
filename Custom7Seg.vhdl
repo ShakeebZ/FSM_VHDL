@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity Custom7Seg is
     port (
-        D : IN STD_LOGIC_VECTOR(3 downto 0);
+        D : IN STD_LOGIC_VECTOR(4 downto 0);
         Y : OUT STD_LOGIC_VECTOR(6 downto 0)
     );
 end Custom7Seg;
