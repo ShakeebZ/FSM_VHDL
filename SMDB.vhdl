@@ -22,6 +22,7 @@ COMPONENT ASIP
         clkASIP, rstASIP, hard_rstASIP, stop_progASIP : in std_logic;
         programASIP : in std_logic_vector(3 DOWNTO 0);
         to_hex : out twoDArrayIO;
+        pauseButtonInputASIP : in std_logic;
         pce_out : out std_logic_vector(3 downto 0)
     );
 END COMPONENT ASIP;
@@ -71,6 +72,7 @@ begin
                             stop_proASIP => Key_debouncedResult(0),
                             programASIP => switch_debouncedResult(3 downto 0),
                             to_hex => signalToHexes,
+                            pauseButtonInputASIP => switch_debouncedResult(8);
                             pce_out => LEDG(3 downto 0));
 
     debounceSwitch0 : debouncer Port Map (clk => alteredClock,--choice
@@ -113,10 +115,16 @@ begin
         switch => SW(14),
         switch_debounced => switch_debouncedResult(7));
     
+    debounceSwitch4 : debouncer Port Map (clk => alteredClock, --pause
+        rst => SW(15),
+        switch => SW(4),
+        switch_debounced => switch_debouncedResult(8));
+    
     debounceKey4 : debouncer Port Map (clk => alteredClock, --stop program
         rst => SW(15),
         switch => key(4),
         switch_debounced => key_debouncedResult(0));
 
+    
 
 end architecture;
