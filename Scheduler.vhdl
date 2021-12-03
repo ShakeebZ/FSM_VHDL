@@ -16,8 +16,8 @@ entity Scheduler is
 end Scheduler;
 
 architecture behaviour of Scheduler IS
-    type state is (idle, running, transition);
-    type programType is (program1, program2, program3, program4, programError);
+    type state is (idle, running);
+    type programType is (program1, program2, program3, program4, programError, programIdle);
 
     signal current_state : state;
     signal currentProgram, nextProgram : programType;
@@ -28,7 +28,6 @@ architecture behaviour of Scheduler IS
     signal iteratorProgram4 : unsigned(6 downto 0) := "1011111"; --program4's start
     signal ProgramErrorOutput : unsigned(6 downto 0) := "1110001"; --error's instruction
     
-
 begin
     PROCESS(rstS, hard_resetS) --resets everything
         begin
@@ -46,7 +45,7 @@ begin
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = running)) THEN
---           iteratorProgram2 <= iteratorProgram2 + 1;
+            iteratorProgram2 <= iteratorProgram2 + 1;
             inst_outS <= std_logic_vector(iteratorProgram2);
             if (iteratorProgram2 = "0101010") THEN
                 toPCE <= '1';
@@ -60,6 +59,7 @@ begin
                  toPCE <= '1';
                  current_state <= idle;
             end if;
+
         elsif (rising_edge(CLKS) AND (currentProgram = program4) AND (current_state = running)) THEN
             iteratorProgram4 <= iteratorProgram4 + 1;
             inst_outS <= std_logic_vector(iteratorProgram4);
@@ -67,6 +67,7 @@ begin
                 toPCE <= '1';
                 current_state <= idle;
             end if;
+
         elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = running)) THEN
             inst_outS <= std_logic_vector(ProgramErrorOutput);
             current_state <= idle;
@@ -77,14 +78,17 @@ begin
     end process;
 
 
-    PROCESS(nextProgram) --reads to see if there is a change in next state, if there is, then check current state's status
-            begin
-                if (current_state = idle) THEN
+    PROCESS(nextProgram, CLKS) --reads to see if there is a change in next state, if there is, then check current state's status
+        begin
+            if (rising_edge(CLKS)) THEN
+                if (current_state = idle AND nextProgram /= currentProgram) THEN
                     current_state <= running;
                     currentProgram <= nextProgram;
-                else 
-                    current_state <= current_state; --program is already busy with another program running, thus continue with that program till idle
+                elsif (current_state = idle AND nextProgram = currentProgram) THEN 
+                    current_state <= running; --program is already busy with another program running, thus continue with that program till idle
+                    currentProgram <= currentProgram;
                 end if;
+            end if;
     END PROCESS;
 
     PROCESS(programS) --reads input, then assigns program type
@@ -96,71 +100,15 @@ begin
             elsif (programS = "0100") THEN
                 nextProgram <= program3;
             elsif (programS = "1000") THEN
-                nextProgram <= program4;
+                if (stop_progS) THEN
+                    nextProgram <= programIdle;
+                else 
+                    nextProgram <= program4;
+                end if;
+            elsif (programS <= "0000") THEN
+                nextProgram <= programIdle;
             else
                 nextProgram <= programError;
             end if;
         end process;
 end architecture;
-
-
-
-    --          if (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = running)) THEN --instructions = 32, n-1 = 31, 31st will be seperate to set state to idle and program to programNone
-    --          inst_outS <= std_logic_vector(iteratorProgram1);
-    --          iteratorProgram1 <= iteratorProgram1 + 1;
-    --          if (iteratorProgram1 = "0011111") THEN
-    --              toPCE <= '1';
-    --              iteratorProgram1 <= "0000000";
-    --              current_state <= transition;
-    --          end if;
- 
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = running)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram2);
-    --          iteratorProgram2 <= iteratorProgram2 + 1;
-    --          if (iteratorProgram2 = "0101010") THEN
-    --              toPCE <= '1';
-    --              iteratorProgram2 <= "0000000";
-    --              current_state <= transition;
-    --          end if;
- 
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = running)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram3);
-    --          iteratorProgram3 <= iteratorProgram3 + 1;
-    --          if (iteratorProgram3 = "0110101") THEN
-    --              toPCE <= '1';
-    --              iteratorProgram3 <= "0000000";
-    --              current_state <= transition;
-    --          end if;
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program4) AND (current_state = running)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram4);
-    --          iteratorProgram4 <= iteratorProgram4 + 1;
-    --          if (iteratorProgram4 = "1110001") THEN
-    --              toPCE <= '1';
-    --              iteratorProgram4 <= "1100000";
-    --              current_state <= running;
-    --          end if;
-    --      elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = running)) THEN
-    --          inst_outS <= std_logic_vector(ProgramErrorOutput);
-    --          current_state <= transition;
-    --          ProgramErrorOutput <= "0000000";
- 
- 
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = transition)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram1);
-    --          iteratorProgram1 <= "0000001";
-    --          current_state <= idle;
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = transition)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram2);
-    --          iteratorProgram2 <= "0100000";
-    --          current_state <= idle; 
-    --      elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = transition)) THEN
-    --          inst_outS <= std_logic_vector(iteratorProgram3);
-    --          iteratorProgram3 <= "0101011";
-    --          current_state <= idle;
-    --      elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = transition)) THEN
-    --          inst_outS <= std_logic_vector(ProgramErrorOutput);
-    --          ProgramErrorOutput <= "1110010";
-    --          current_state <= idle;
-    --      end if;
-    --      toPCE <= '0';
-    --  end process;

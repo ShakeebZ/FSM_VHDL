@@ -21,7 +21,7 @@ COMPONENT ASIP
     port (
         clkASIP, rstASIP, hard_rstASIP, stop_progASIP : in std_logic;
         programASIP : in std_logic_vector(3 DOWNTO 0);
-        to_hex : out twoDArray;
+        to_hex : out twoDArrayIO;
         pce_out : out std_logic_vector(3 downto 0)
     );
 END COMPONENT ASIP;
@@ -47,7 +47,7 @@ COMPONENT debouncer
 END COMPONENT debouncer;
 
 SIGNAL alteredClock : std_logic; 
-SIGNAL signalToHexes : twoDArray;
+SIGNAL signalToHexes : twoDArrayIO;
 SIGNAL switch_debouncedResult : std_logic_vector(8 downto 0);
 SIGNAL Key_DebouncedResult : std_logic_vector(3 downto 0);
 
