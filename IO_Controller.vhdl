@@ -12,8 +12,6 @@ end IO_Controller;
 
 architecture structure of IO_Controller is
 
-    type twoDArray IS array (7 downto 0) of std_logic_vector(6 downto 0); -- 7seg display * 8 hex displays
-
     component Custom7Seg is
         port (
             D : IN STD_LOGIC_VECTOR(4 downto 0);

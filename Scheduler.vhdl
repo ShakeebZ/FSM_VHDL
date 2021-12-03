@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+USE work.definitions_package.all;
 
 entity Scheduler is
     port (
@@ -9,50 +10,24 @@ entity Scheduler is
         hard_resetS : in std_logic;
         stop_progS : in std_logic;
         programS : in std_logic_vector(3 downto 0);
-        inst_outS : out std_logic_vector(5 downto 0);
+        inst_outS : out std_logic_vector(6 downto 0);
         toPCE : out std_logic
     );
 end Scheduler;
 
-architecture rtl of Scheduler
+architecture behaviour of Scheduler
     type state is (idle, running, transition);
     type programType is (program1, program2, program3, program4, programError);
 
     signal program_state : state;
     signal currentProgram, nextProgram : programType;
     signal incrementor;
-    signal toControlUnit : unsigned(5 downto 0);
-    signal toIO_Controller : std_logic_vector(39 downto 0);
-    signal iteratorProgram1 : unsigned(5 downto 0) := "000001"; --program1's start
-    signal iteratorProgram2 : unsigned(5 downto 0) := "100000"; --program2's start
-    signal iteratorProgram3 : unsigned(5 downto 0) := "101011"; --program3's start
-
-    component PCE 
-        PORT (
-            hardResetPCE : In STD_LOGIC;
-            ClkPCE : In STD_Logic;
-            programPCE : In STD_Logic;
-            toGreenlights : OUT STD_LOGIC_VECTOR(3 downto 0)
-        );
-    end component;
-
-    component ControlUnit
-        port (
-            clkCU : in std_logic;
-            rstCU : in std_logic;
-            hard_rstCU : in std_logic;
-            instCU : in std_logic_vector(5 DOWNTO 0);
-            toSegCU : out std_logic_vector(39 DOWNTO 0)
-        );
-    end component;
-
-    component IO_Controller
-        port (
-            toSeg : IN std_logic_vector(39 downto 0);
-            toHex : OUT twoDArray
-        );
-    end component;
-
+    signal iteratorProgram1 : unsigned(6 downto 0) := "0000001"; --program1's start
+    signal iteratorProgram2 : unsigned(6 downto 0) := "0100000"; --program2's start
+    signal iteratorProgram3 : unsigned(6 downto 0) := "0101011"; --program3's start
+    signal iteratorProgram4 : unsigned(6 downto 0) := "1100000"; --program4's start
+    signal ProgramErrorOutput : unsigned(6 downt 0) := "1110010"; --error's instruction
+    
 
 begin
     PROCESS(rstS, hard_resetS) --resets everything
@@ -63,43 +38,63 @@ begin
     PROCESS(CLKS)) --increments through instructions in respective program type
     begin
         if (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = running)) THEN --instructions = 32, n-1 = 31, 31st will be seperate to set state to idle and program to programNone
-            toControlUnit <= std_logic(iteratorProgram1);
+            inst_outS <= std_logic(iteratorProgram1);
             iteratorProgram1 <= iteratorProgram1 + 1;
-            if (iteratorProgram1 = "011111") THEN
-                iteratorProgram1 = "000000";
-                current_state = transition;
+            if (iteratorProgram1 = "0011111") THEN
+                toPCE <= '1';
+                iteratorProgram1 <= "0000000";
+                current_state <= transition;
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = running)) THEN
-            toControlUnit <= std_logic(iteratorProgram2);
+            inst_outS <= std_logic(iteratorProgram2);
             iteratorProgram2 <= iteratorProgram2 + 1;
-            if (iteratorProgram2 = "101010")
-                iteratorProgram2 = "000000";
-                current_state = transition;
+            if (iteratorProgram2 = "0101010")
+                toPCE <= '1';
+                iteratorProgram2 <= "0000000";
+                current_state <= transition;
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = running)) THEN
-            toControlUnit <= std_logic(iteratorProgram3);
+            inst_outS <= std_logic(iteratorProgram3);
             iteratorProgram3 <= iteratorProgram3 + 1;
-            if (iteratorProgram3 = "110101") THEN
-                iteratorProgram3 = "000000";
-                current_state = transition;
+            if (iteratorProgram3 = "0110101") THEN
+                toPCE <= '1';
+                iteratorProgram3 <= "0000000";
+                current_state <= transition;
             end if;
-        
+        elsif (rising_edge(CLKS) AND (currentProgram = program4) AND (current_state = running)) THEN
+            inst_outS <= std_logic(iteratorProgram4);
+            iteratorProgram4 <= iteratorProgram4 + 1;
+            if (iteratorProgram4 = "1110001") THEN
+                toPCE <= '1';
+                iteratorProgram4 <= "1100000";
+                current_state <= running;
+            end if;
+        elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = running)) THEN
+            inst_outS <= std_logic(ProgramErrorOutput);
+            current_state <= transition;
+            ProgramErrorOutput <= "0000000";
+
 
         elsif (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = transition)) THEN
-            toControlUnit <= std_logic(iteratorProgram1);
-            iteratorProgram1 <= "000001";
-            current_state = idle;
+            inst_outS <= std_logic(iteratorProgram1);
+            iteratorProgram1 <= "0000001";
+            current_state <= idle;
         elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = transition)) THEN
-            toControlUnit <= std_logic(iteratorProgram2);
-            iteratorProgram2 <= "100000";
-            current_state = idle; 
+            inst_outS <= std_logic(iteratorProgram2);
+            iteratorProgram2 <= "0100000";
+            current_state <= idle; 
         elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = transition)) THEN
-            toControlUnit <= std_logic(iteratorProgram3);
-            iteratorProgram3 <= "101011";
-            current_state = idle;
+            inst_outS <= std_logic(iteratorProgram3);
+            iteratorProgram3 <= "0101011";
+            current_state <= idle;
+        elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = transition)) THEN
+            inst_outS <= std_logic(ProgramErrorOutput);
+            ProgramErrorOutput <= "1110010";
+            current_state <= idle;
         end if;
+        toPCE <= '0';
     end process;
 
     PROCESS(nextProgram) --reads to see if there is a change in next state, if there is, then check current state's status
@@ -126,11 +121,4 @@ begin
                 nextProgram = programError;
             end if;
         end process;
-    
-ControlUnitEnt : ControlUnit port map (clkCU => CLKS, --need to figure out where/what to instantiate
-                                    rstCU => rstS,
-                                    hard_rstCU => hard_resetS,
-                                    instCU => iteratorProgram1,
-                                    toSegCU => toIO_Controller)
-
 end architecture
