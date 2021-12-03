@@ -11,7 +11,7 @@ end Custom7Seg;
 
 architecture behaviour of Custom7Seg is
 begin
-    Y <= "1111111" WHEN (D = "00000") ELSE --Blank
+    Y <= "1111111" WHEN D = "00000" ELSE --Blank
         "0111111" WHEN D = "00001" ELSE -- Middle Line
         "1111110" WHEN D = "00010" ELSE -- Top Line
         "1101111" WHEN D = "00011" ELSE -- LeftBot Line
