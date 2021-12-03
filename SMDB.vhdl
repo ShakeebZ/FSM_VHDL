@@ -60,7 +60,6 @@ begin
     HEX5 <= signalToHexes(5);
     HEX6 <= signalToHexes(6);
     HEX7 <= signalToHexes(7);
-    
 
     prescaleClock : Prescale Port Map (CLK => Clock_50, 
                                     mode => switch_debouncedResult(4) & switch_debouncedResult(5),
@@ -68,56 +67,56 @@ begin
     
     ASIP_ent : ASIP Port Map (clkASIP => alteredClock,
                             rstASIP => Key_DebouncedResult(1),
-                            hard_rstASIP => Key_DebouncedResult(0),
-                            stop_proASIP => Key_DebouncedResult(2),
+                            hard_rstASIP => SWitch_DebouncedResult(7),
+                            stop_proASIP => Key_debouncedResult(0),
                             programASIP => switch_debouncedResult(3 downto 0),
                             to_hex => signalToHexes,
                             pce_out => LEDG(3 downto 0));
 
-    debounceSwitch0 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
+    debounceSwitch0 : debouncer Port Map (clk => alteredClock,--choice
+        rst => SW(15),
         switch => SW(0),
         switch_debounced => switch_debouncedResult(0));
 
-    debounceSwitch1 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
+    debounceSwitch1 : debouncer Port Map (clk => alteredClock,--choice
+        rst => SW(15),
         switch => SW(1),
         switch_debounced => switch_debouncedResult(1));
         
-    debounceSwitch2 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
+    debounceSwitch2 : debouncer Port Map (clk => alteredClock,--choice
+        rst => SW(15),
         switch => SW(2),
         switch_debounced => switch_debouncedResult(2));
     
-    debounceSwitch3 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
+    debounceSwitch3 : debouncer Port Map (clk => alteredClock,--choice
+        rst => SW(15),
         switch => SW(3),
         switch_debounced => switch_debouncedResult(3));
 
-    debounceSwitch17 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
+    debounceSwitch17 : debouncer Port Map (clk => alteredClock,--speed
+        rst => SW(15),
         switch => SW(17),
         switch_debounced => switch_debouncedResult(4));
 
-    debounceSwitch16 : debouncer Port Map (clk => alteredClock,
-        rst => key(16),
-        switch => SW(3),
+    debounceSwitch16 : debouncer Port Map (clk => alteredClock,--speed
+        rst => SW(15),
+        switch => SW(16),
         switch_debounced => switch_debouncedResult(5));
 
-    debounceKey1 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
-        switch => key(1),
-        switch_debounced => key_debouncedResult(0));
+    debounceSwitch15 : debouncer Port Map (clk => alteredClock,--soft reset
+        rst => SW(15),
+        switch => SW(15),
+        switch_debounced => switch_debouncedResult(6));
 
-    debounceKey2 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
-        switch => key(2),
-        switch_debounced => key_debouncedResult(1));
+    debounceSwitch14 : debouncer Port Map (clk => alteredClock, --hard reset
+        rst => SW(15),
+        switch => SW(14),
+        switch_debounced => switch_debouncedResult(7));
     
-    debounceKey3 : debouncer Port Map (clk => alteredClock,
-        rst => key(2),
-        switch => key(3),
-        switch_debounced => key_debouncedResult(2));
+    debounceKey4 : debouncer Port Map (clk => alteredClock, --stop program
+        rst => SW(15),
+        switch => key(4),
+        switch_debounced => key_debouncedResult(0));
 
 
 end architecture;
