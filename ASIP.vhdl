@@ -8,7 +8,6 @@ entity ASIP is
         programASIP : in std_logic_vector(3 DOWNTO 0);
         to_hex : out twoDArray;
         pce_out : out std_logic_vector(3 downto 0)
-
     );
 end ASIP;
 
