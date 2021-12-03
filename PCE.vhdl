@@ -16,6 +16,7 @@ architecture behaviour of PCE is
 
     begin
         process(ClkPCE)
+		  BEGIN
             if (hardResetPCE = '1') then
                 counter <= "0000";
             else 
@@ -25,6 +26,6 @@ architecture behaviour of PCE is
             end if;
         end process;
 
-    toGreenlights <= std_logic(counter);
+    toGreenlights <= std_logic_vector(counter);
 
 end architecture behaviour;
