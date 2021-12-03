@@ -37,7 +37,7 @@ begin
         "1110001" WHEN D = "10101" ELSE -- Letter W rightside/Tail of right snake
 
         "0010001" WHEN D = "10110" ELSE -- Letter y
-        "1110111" WHEN D = "10111" ELSE --Bottom Line
+        "1110111" WHEN D = "10111" ELSE --Bottom Line   
         "1000111" WHEN D = "11000" ELSE -- Tail of left facing snake
         
         "0000000";
