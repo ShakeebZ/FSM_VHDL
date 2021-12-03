@@ -7,7 +7,7 @@ entity Datapath is
         clkD, rstD, hard_rstD, stop_progD : in std_logic;
         programD : in std_logic_vector(3 DOWNTO 0);
         instD : out std_logic_vector(6 DOWNTO 0);
-        pce : out std_logic_vector(3 DOWNTO 0)
+        pce_output : out std_logic_vector(3 DOWNTO 0)
     );
 end Datapath;
 
@@ -36,7 +36,7 @@ end component;
 SIGNAL PCESignal : std_logic;
 begin
 
-PCEComponent : PCE port map (hardResetPCE => hard_rstD, ClkPCE => clkD, programPCE => PCESignal, toGreenlights => pce);
+PCEComponent : PCE port map (hardResetPCE => hard_rstD, ClkPCE => clkD, programPCE => PCESignal, toGreenlights => pce_output);
 SchedulerComponent : Scheduler port map (CLKS => clkD, rstS => rstD, hard_resetS => hard_rstD, stop_progS => stop_progD, programS => programD, inst_outS => instD, toPCE =>PCESignal);
 
 end architecture;
