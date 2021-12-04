@@ -21,6 +21,6 @@ architecture structure of IO_Controller is
 begin
 
     for i in 0 to 7 generate
-        segDecodedi : Custom7Seg PORT MAP(D => toSeg(i), Y => toHex(i));
+        segDecoded : Custom7Seg PORT MAP(D => toSeg(i), Y => toHex(i));
     end generate;
 end architecture;
