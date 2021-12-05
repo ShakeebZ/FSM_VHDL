@@ -19,7 +19,7 @@ end Scheduler;
 architecture behaviour of Scheduler IS
     type state is (idle, running);
     type programType is (program1, program2, program3, program4, programError, programIdle);
-    
+
     signal current_state, next_state : state;
     signal currentProgram, nextProgram : programType;
     signal incrementor : std_logic;
@@ -72,7 +72,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram2);
 					if (iteratorProgram2 = "0101010") THEN
-						iteratorProgram1 <= "0011111";
+						iteratorProgram2 <= "0011111";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -82,7 +82,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram3);
 					if (iteratorProgram3 = "0110101") THEN
-						iteratorProgram1 <= "0101010";
+						iteratorProgram3 <= "0101010";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -92,7 +92,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram4);
 					if (iteratorProgram4 = "1110001") THEN
-						iteratorProgram1 <= "1011111";
+						iteratorProgram4 <= "1011111";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -119,6 +119,11 @@ begin
 					else 
 						inst_outS <= "0000000";
 					end if;
+			elsif (rising_edge(CLKS) AND (rstS = '1' OR hard_resetS = '1')) THEN
+					iteratorProgram1 <= "0000000";
+					iteratorProgram2 <= "0011111";
+					iteratorProgram3 <= "0101010";
+					iteratorProgram4 <= "1011111";
 			end if;
     end process;
 
