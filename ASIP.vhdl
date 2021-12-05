@@ -1,13 +1,13 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.definitions_package.all;
 
 entity ASIP is
     port (
         clkASIP, rstASIP, hard_rstASIP, stop_progASIP : in std_logic;
         programASIP : in std_logic_vector(3 DOWNTO 0);
         to_hex : out twoDArrayIO;
-        pauseButtonInputASIP : in std_logic;
         pce_out : out std_logic_vector(3 downto 0)
     );
 end ASIP;
@@ -40,25 +40,29 @@ component IO_Controller is
     );
 end component;
 
+SIGNAL instSignal : std_logic_vector(6 downto 0);
+SIGNAL toSegSignal : twoDArrayCU;
+
 begin
 
 ControlUnitASIP : ControlUnit port map(
     clkCU => clkASIP,
     rstCU => rstASIP,
     hard_rstCU => hard_rstASIP,
-    instCU => instD, -- Dunno if this will work
-    toSegCU => toSegIO -- Dunno if this will work Pt2
+    instCU => instSignal,
+    toSegCU => toSegSignal
     );
-DatapathASIP : ControlUnit port map(
+DatapathASIP : Datapath port map(
     clkD => clkASIP,
     rstD => rstASIP,
     hard_rstD => hard_rstASIP,
     stop_progD => stop_progASIP,
-    instD => instCU, -- Dunno if this will work
+    instD => instSignal,
+	 programD => programASIP,
     pce_output => pce_out
 );
 IO_ControllerASIP : IO_Controller port map(
-    toSegIO => toSegCU, -- Dunno if this will work Pt2
+    toSegIO => toSegSignal,
     toHexIO => to_hex
 );
 
