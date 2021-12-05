@@ -23,11 +23,11 @@ architecture behaviour of Scheduler IS
     signal current_state, next_state : state;
     signal currentProgram, nextProgram : programType;
     signal incrementor : std_logic;
-    signal iteratorProgram1 : unsigned(6 downto 0) := "0000000"; --program1's start
-    signal iteratorProgram2 : unsigned(6 downto 0) := "0011111"; --program2's start
-    signal iteratorProgram3 : unsigned(6 downto 0) := "0101010"; --program3's start
-    signal iteratorProgram4 : unsigned(6 downto 0) := "1011111"; --program4's start
-    signal ProgramErrorOutput : unsigned(6 downto 0) := "1110001"; --error's instruction
+    signal iteratorProgram1 : unsigned(6 downto 0) := "0000001"; --program1's start
+    signal iteratorProgram2 : unsigned(6 downto 0) := "0100000"; --program2's start
+    signal iteratorProgram3 : unsigned(6 downto 0) := "0101011"; --program3's start
+    signal iteratorProgram4 : unsigned(6 downto 0) := "1100000"; --program4's start
+    signal ProgramErrorOutput : unsigned(6 downto 0) := "1110010"; --error's instruction
     
 begin
 
