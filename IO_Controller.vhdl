@@ -5,8 +5,8 @@ USE work.definitions_package.all;
 
 entity IO_Controller is
     port (
-        toSeg : IN twoDArrayCU;
-        toHex : OUT twoDArrayIO
+        toSegIO : IN twoDArrayCU;
+        toHexIO : OUT twoDArrayIO
     );
 end ENtity;
 
