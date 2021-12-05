@@ -35,7 +35,7 @@ begin
             current_state <= idle;
     END Process;
 
-    PROCESS(CLKS, pause) --increments through instructions in respective program type
+    PROCESS(CLKS, pauseButtonInputS) --increments through instructions in respective program type
     begin
         if (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = running)) THEN --instructions = 32, n-1 = 31, 31st will be seperate to set state to idle and program to programNone
             if (pauseButtonInputS = '0') THEN
@@ -58,7 +58,7 @@ begin
             inst_outS <= std_logic_vector(iteratorProgram2);
             if (iteratorProgram2 = "0101010") THEN
                 toPCE <= '1';
-                current_state <= Idle
+                current_state <= Idle;
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = running)) THEN
@@ -89,7 +89,7 @@ begin
             inst_outS <= std_logic_vector(ProgramErrorOutput);
             current_state <= idle;--does pause pause this?
         else 
-            insts_outS <= std_logic_vector("0000000");
+            inst_outS <= "0000000";
             current_state <= Idle;
             end if;
     end process;
@@ -117,7 +117,7 @@ begin
             elsif (programS = "0100") THEN
                 nextProgram <= program3;
             elsif (programS = "1000") THEN
-                if (stop_progS) THEN
+                if (stop_progS = '1') THEN
                     nextProgram <= programIdle;
                 else 
                     nextProgram <= program4;

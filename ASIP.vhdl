@@ -9,7 +9,6 @@ entity ASIP is
         to_hex : out twoDArray;
         pauseButtonInputASIP : in std_logic;
         pce_out : out std_logic_vector(3 downto 0)
-
     );
 end ASIP;
 
