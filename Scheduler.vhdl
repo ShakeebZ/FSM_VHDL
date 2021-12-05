@@ -99,6 +99,9 @@ begin
 				elsif (currentProgram = programError) THEN
 					inst_outS <= std_logic_vector(ProgramErrorOutput);
 					next_state <= idle;
+				elsif (currentProgram = programIdle) THEN
+					inst_outS <= "0000000";
+					next_state <= Idle; 
 				else 
 					inst_outS <= "0000000";
 					next_state <= Idle;
@@ -120,10 +123,17 @@ begin
 						inst_outS <= "0000000";
 					end if;
 			elsif (rising_edge(CLKS) AND (rstS = '1' OR hard_resetS = '1')) THEN
-					iteratorProgram1 <= "0000000";
-					iteratorProgram2 <= "0011111";
-					iteratorProgram3 <= "0101010";
-					iteratorProgram4 <= "1011111";
+					inst_outS <= "0000000";
+					next_state <= idle;
+					if (currentProgram = program1) THEN
+						iteratorProgram1 <= "0000000";
+					elsif (currentProgram = program2) THEN
+						iteratorProgram2 <= "0011111";
+					elsif (currentProgram = program3) THEN
+						iteratorProgram3 <= "0101010";
+					elsif (currentProgram = program4) THEN
+						iteratorProgram4 <= "1011111";
+					end if;
 			end if;
     end process;
 
