@@ -7,6 +7,7 @@ entity Datapath is
         clkD, rstD, hard_rstD, stop_progD : in std_logic;
         programD : in std_logic_vector(3 DOWNTO 0);
         instD : out std_logic_vector(6 DOWNTO 0);
+        pauseButtonInputDP : in std_logic;
         pce_output : out std_logic_vector(3 DOWNTO 0)
     );
 end Datapath;

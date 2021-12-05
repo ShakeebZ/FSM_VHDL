@@ -11,7 +11,8 @@ entity Scheduler is
         stop_progS : in std_logic;
         programS : in std_logic_vector(3 downto 0);
         inst_outS : out std_logic_vector(6 downto 0);
-        toPCE : out std_logic
+        toPCE : out std_logic;
+        pauseButtonInputS : in std_logic
     );
 end Scheduler;
 
@@ -34,10 +35,14 @@ begin
             current_state <= idle;
     END Process;
 
-    PROCESS(CLKS) --increments through instructions in respective program type
+    PROCESS(CLKS, pauseButtonInputS) --increments through instructions in respective program type
     begin
         if (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = running)) THEN --instructions = 32, n-1 = 31, 31st will be seperate to set state to idle and program to programNone
-            iteratorProgram1 <= iteratorProgram1 + 1;
+            if (pauseButtonInputS = '0') THEN
+               iteratorProgram1 <= iteratorProgram1 + 1;
+            else
+                iteratorProgram1 <= iteratorProgram1;
+            end if;
             inst_outS <= std_logic_vector(iteratorProgram1);
             if (iteratorProgram1 = "0011111") THEN
                 toPCE <= '1';
@@ -45,23 +50,35 @@ begin
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program2) AND (current_state = running)) THEN
-            iteratorProgram2 <= iteratorProgram2 + 1;
+            if (pauseButtonInputS = '0') THEN
+                iteratorProgram2 <= iteratorProgram2 + 1;
+            else
+                iteratorProgram2 <= iteratorProgram2;
+            end if;
             inst_outS <= std_logic_vector(iteratorProgram2);
             if (iteratorProgram2 = "0101010") THEN
                 toPCE <= '1';
-                current_state <= Idle
+                current_state <= Idle;
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program3) AND (current_state = running)) THEN
+            if (pauseButtonInputS = '0') THEN
+                iteratorProgram3 <= iteratorProgram3 + 1;
+            else
+                iteratorProgram3 <= iteratorProgram3;
+            end if;
             inst_outS <= std_logic_vector(iteratorProgram3);
-            iteratorProgram3 <= iteratorProgram3 + 1;
             if (iteratorProgram3 = "0110101") THEN
                  toPCE <= '1';
                  current_state <= idle;
             end if;
 
         elsif (rising_edge(CLKS) AND (currentProgram = program4) AND (current_state = running)) THEN
-            iteratorProgram4 <= iteratorProgram4 + 1;
+            if (pauseButtonInputS = '0') THEN
+                iteratorProgram4 <= iteratorProgram4 + 1;
+            else
+                iteratorProgram4 <= iteratorProgram4;
+            end if;
             inst_outS <= std_logic_vector(iteratorProgram4);
             if (iteratorProgram4 = "1110001") THEN
                 toPCE <= '1';
@@ -70,9 +87,9 @@ begin
 
         elsif (rising_edge(CLKS) AND (currentProgram = programError) AND (current_state = running)) THEN
             inst_outS <= std_logic_vector(ProgramErrorOutput);
-            current_state <= idle;
+            current_state <= idle;--does pause pause this?
         else 
-            insts_outS <= std_logic_vector("0000000");
+            inst_outS <= "0000000";
             current_state <= Idle;
             end if;
     end process;
@@ -100,7 +117,7 @@ begin
             elsif (programS = "0100") THEN
                 nextProgram <= program3;
             elsif (programS = "1000") THEN
-                if (stop_progS) THEN
+                if (stop_progS = '1') THEN
                     nextProgram <= programIdle;
                 else 
                     nextProgram <= program4;
