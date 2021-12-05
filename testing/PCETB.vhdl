@@ -15,7 +15,7 @@ component PCE
     );
 end component;
 
-SIGNAL hardResetPCETest : STD_LOGIC := '0';
+SIGNAL hardResetPCETest : STD_LOGIC := '1';
 SIGNAL ClkPCETest : STD_LOGIC := '0';
 SIGNAL programPCETest : STD_LOGIC := '0';
 SIGNAL toGreenlightsTest : STD_LOGIC_VECTOR(3 downto 0);
@@ -36,7 +36,7 @@ begin
     process
         begin
             hardResetPCETest <= NOT hardResetPCETest;
-            wait for 800 ns;
+            wait for 3200 ns;
         END PROCESS;
 
     DUT : PCE port map (hardResetPCE => hardResetPCETest,
