@@ -19,7 +19,7 @@ end Scheduler;
 architecture behaviour of Scheduler IS
     type state is (idle, running);
     type programType is (program1, program2, program3, program4, programError, programIdle);
-
+    
     signal current_state, next_state : state;
     signal currentProgram, nextProgram : programType;
     signal incrementor : std_logic;
