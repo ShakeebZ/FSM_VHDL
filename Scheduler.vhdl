@@ -32,11 +32,13 @@ architecture behaviour of Scheduler IS
 begin
     PROCESS(rstS, hard_resetS) --resets everything
         begin
+				toPCE <= '0';
             current_state <= idle;
     END Process;
 
     PROCESS(CLKS, pauseButtonInputS) --increments through instructions in respective program type
     begin
+		  toPCE <= '0';
         if (rising_edge(CLKS) AND (currentProgram = program1) AND (current_state = running)) THEN --instructions = 32, n-1 = 31, 31st will be seperate to set state to idle and program to programNone
             if (pauseButtonInputS = '0') THEN
                iteratorProgram1 <= iteratorProgram1 + 1;
@@ -128,4 +130,5 @@ begin
                 nextProgram <= programError;
             end if;
         end process;
+	
 end architecture;
