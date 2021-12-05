@@ -43,6 +43,9 @@ begin
 				elsif (pauseButtonInputS = '1') THEN
 					currentProgram <= currentProgram;
 					current_state <= idle;
+				elsif (next_state = running AND (iteratorProgram1 /= "0011111" OR iteratorProgram2 /= "0101010" OR iteratorProgram3 /= "1110001" OR iteratorProgram4 /= "1110001")) THEN
+					current_state <= running;
+					currentProgram <= currentProgram;
 				else 
 					current_state <= idle;
 				end if;
@@ -59,6 +62,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram1);
 					if (iteratorProgram1 = "0011111") THEN
+						iteratorProgram1 <= "0000000";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -68,6 +72,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram2);
 					if (iteratorProgram2 = "0101010") THEN
+						iteratorProgram1 <= "0011111";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -77,6 +82,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram3);
 					if (iteratorProgram3 = "0110101") THEN
+						iteratorProgram1 <= "0101010";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
@@ -86,6 +92,7 @@ begin
 					toPCE <= '0';
 					inst_outS <= std_logic_vector(iteratorProgram4);
 					if (iteratorProgram4 = "1110001") THEN
+						iteratorProgram1 <= "1011111";
 						toPCE <= '1';
 						next_state <= idle;
 					end if;
