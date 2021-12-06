@@ -73,6 +73,7 @@ begin
 
 
     Process(switch_debouncedResult(8) AND CLK_50)
+        begin
         if (switch_debouncedResult(8) = '0') THEN
             prescaleClock : Prescale Port Map (CLK => Clock_50, 
                                                 mode => switch_debouncedResult(4) & switch_debouncedResult(5),
