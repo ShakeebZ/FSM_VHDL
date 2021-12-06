@@ -6,6 +6,7 @@ entity PreScale is
     port (
         clk : in std_logic;
         mode : in std_logic_vector(1 DOWNTO 0);
+		  disable : in std_logic; -- Pause button (disables the clock)
         clk_out : out std_logic
     );
 end PreScale;
@@ -26,9 +27,9 @@ if (rising_edge(clk)) THEN
 END IF;
 END PROCESS;
 
-clk_out <= STD_LOGIC(CounterNormal(24)) WHEN mode = "00" ELSE
-        STD_LOGIC(CounterSlow(25)) WHEN mode = "01" ELSE
-        STD_LOGIC(CounterFast(23)) WHEN mode = "10" ELSE
-        STD_LOGIC(CounterVeryFast(22)) WHEN mode = "11" ELSE
+clk_out <= STD_LOGIC(CounterNormal(24)) WHEN mode = "00" AND disable = '0' ELSE
+        STD_LOGIC(CounterSlow(25)) WHEN mode = "01" AND disable = '0' ELSE
+        STD_LOGIC(CounterFast(23)) WHEN mode = "10" AND disable = '0' ELSE
+        STD_LOGIC(CounterVeryFast(22)) WHEN mode = "11" AND disable = '0' ELSE
         '0';
 end architecture;

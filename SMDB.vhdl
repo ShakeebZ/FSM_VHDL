@@ -37,7 +37,7 @@ END COMPONENT Prescale;
 
 COMPONENT debouncer
     generic ( -- ask question on this
-        timeout_cycles : positive := 100
+        timeout_cycles : positive := 1000
         );
     port (
         clk : in std_logic;
@@ -51,6 +51,7 @@ SIGNAL alteredClock : std_logic;
 SIGNAL signalToHexes : twoDArrayIO;
 SIGNAL switch_debouncedResult : std_logic_vector(8 downto 0);
 SIGNAL Key_DebouncedResult : std_logic_vector(3 downto 0);
+SIGNAL OrResult : std_logic;
 
 begin
     HEX0 <= signalToHexes(0);
@@ -72,62 +73,61 @@ begin
 									 );
 
 
-    PreScalerComponent : PreScale port map(clk => CLOCK_50,
-     mode => SW(17 DOWNTO 16),
-	  disable => SW(13),
+    PreScaler0 : PreScale port map(clk => CLOCK_50,
+     mode(1) => switch_debouncedResult(4),
+	  mode(0) => switch_debouncedResult(5),
+	  disable => SW(13), -- Pause button (disables the clock)
      clk_out => alteredClock
     );
+	 
+	 
 
-    debounceSwitch0 : debouncer Port Map (clk => alteredClock,--choice
-        rst => SW(15) OR SW(14),
-        switch => SW(0),
+    debounce0 : debouncer Port Map (clk => CLOCK_50,--choice
+        rst => OrResult,
+        switch => SW(1),
         switch_debounced => switch_debouncedResult(0));
 
-    debounceSwitch1 : debouncer Port Map (clk => alteredClock,--choice
-        rst => SW(15) OR SW(14),
-        switch => SW(1),
+    debounce1: debouncer Port Map (clk => CLOCK_50,--choice
+        rst => OrResult,
+        switch => SW(2),
         switch_debounced => switch_debouncedResult(1));
         
-    debounceSwitch2 : debouncer Port Map (clk => alteredClock,--choice
-        rst => SW(15) OR SW(14),
-        switch => SW(2),
+    debounce2: debouncer Port Map (clk => CLOCK_50,--choice
+        rst => OrResult,
+        switch => SW(3),
         switch_debounced => switch_debouncedResult(2));
     
-    debounceSwitch3 : debouncer Port Map (clk => alteredClock,--choice
-        rst => SW(15) OR SW(14),
-        switch => SW(3),
+    debounce3: debouncer Port Map (clk => CLOCK_50,--choice
+        rst => OrResult,
+        switch => SW(4),
         switch_debounced => switch_debouncedResult(3));
 
-    debounceSwitch17 : debouncer Port Map (clk => alteredClock,--speed
-        rst => SW(15) OR SW(14),
+    debounce4: debouncer Port Map (clk => CLOCK_50,--speed
+        rst => OrResult,
         switch => SW(17),
         switch_debounced => switch_debouncedResult(4));
 
-    debounceSwitch16 : debouncer Port Map (clk => alteredClock,--speed
-        rst => SW(15) OR SW(14),
+    debounce5: debouncer Port Map (clk => CLOCK_50,--speed
+        rst => OrResult,
         switch => SW(16),
         switch_debounced => switch_debouncedResult(5));
 
-    debounceSwitch15 : debouncer Port Map (clk => alteredClock,--soft reset
-        rst => SW(15) OR SW(14),
+    debounce6: debouncer Port Map (clk => CLOCK_50,--soft reset
+        rst => OrResult,
         switch => SW(15),
         switch_debounced => switch_debouncedResult(6));
 
-    debounceSwitch14 : debouncer Port Map (clk => alteredClock, --hard reset
-        rst => SW(15) OR SW(14),
+    debounce7: debouncer Port Map (clk => CLOCK_50, --hard reset
+        rst => OrResult,
         switch => SW(14),
         switch_debounced => switch_debouncedResult(7));
     
-    debounceSwitch4 : debouncer Port Map (clk => alteredClock, --pause
-        rst => SW(15) OR SW(14),
-        switch => SW(4),
-        switch_debounced => switch_debouncedResult(8));
     
-    debounceKey4 : debouncer Port Map (clk => alteredClock, --stop program
-        rst => SW(15) OR SW(14),
+    debounce8: debouncer Port Map (clk => CLOCK_50, --stop program
+        rst => OrResult,
         switch => key(3),
         switch_debounced => key_debouncedResult(0));
 
-    
+    OrResult <= SW(17) OR SW(16);
 
 end architecture;
