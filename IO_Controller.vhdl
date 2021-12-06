@@ -19,7 +19,7 @@ architecture structure of IO_Controller is
         );
     end component;
 begin
-		 forgenerate: for i in 0 to 7 generate
+		 segDecodedGenerate : for i in 0 to 7 generate
 			  segDecoded : Custom7Seg PORT MAP(D => toSeg(i), Y => toHex(i));
 		 end generate;
 end architecture;

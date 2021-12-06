@@ -31,6 +31,7 @@ COMPONENT Prescale
 port (
     clk : in std_logic;
     mode : in std_logic_vector(1 DOWNTO 0);
+    disable : in std_logic;
     clk_out : out std_logic
 );
 END COMPONENT Prescale;
