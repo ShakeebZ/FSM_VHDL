@@ -143,13 +143,11 @@ begin
 						if (iteratorProgram4 = "1110010") THEN --1110001
 							current_state <= running;
 							iteratorProgram4 <= "1100000";
-							inst_outS <= "0000000";
 							toPCE <= '1';
 						end if;
 					else 
 						current_state <= idle;
 						iteratorProgram4 <= "1100000";
-						inst_outS <= "0000000";
 						toPCE <= '0';
 					end if;
 				elsif (currentProgram = programError) THEN
