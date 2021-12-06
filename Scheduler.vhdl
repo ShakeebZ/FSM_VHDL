@@ -75,7 +75,7 @@ begin
 				iteratorProgram3 <= "0101011"; --0101011
 				inst_outS <= "0000000";
 				current_state <= idle;
-				currentProgram <= programIdle;
+				currentProgram <= nextProgram;
 			else
 				if (rising_edge(CLKS) AND current_state = idle) THEN
 					currentProgram <= nextProgram;
