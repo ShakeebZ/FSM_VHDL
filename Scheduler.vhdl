@@ -68,7 +68,6 @@ begin
 	PROCESS(CLKS, hard_resetS, rstS, stop_progS)
 		begin
 		if (hard_resetS /= '1') THEN
-		
 			if (rstS = '1' AND (current_state = idle OR current_state = running) AND currentProgram /= program4) THEN
 				toPCE <= '0';
 				iteratorProgram1 <= "0000001"; --0000001
@@ -106,6 +105,7 @@ begin
 					inst_outS <= "0000000";
 					current_state <= idle;
 				else
+					currentProgram <= programError;
 					current_state <= running;
 					inst_outS <= std_logic_vector(ProgramErrorOutput);
 				end if;
@@ -115,7 +115,7 @@ begin
 				if (currentProgram = program1) THEN
 					iteratorProgram1 <= iteratorProgram1 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram1);
-					if (iteratorProgram1 = "0100000") THEN -- 0111111
+					if (iteratorProgram1 = "0100001") THEN -- 0111111
 						current_state <= idle;
 						inst_outS <= "0000000";
 						toPCE <= '1';
@@ -123,7 +123,7 @@ begin
 				elsif (currentProgram = program2) THEN
 					iteratorProgram2 <= iteratorProgram2 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram2);
-					if (iteratorProgram2 = "0101011") THEN -- 0101010
+					if (iteratorProgram2 = "0101100") THEN -- 0101010
 						current_state <= idle;
 						inst_outS <= "0000000";
 						toPCE <= '1';
@@ -131,7 +131,7 @@ begin
 				elsif (currentProgram = program3) THEN
 					iteratorProgram3 <= iteratorProgram3 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram3);
-					if (iteratorProgram3 = "0110111") THEN --0110101
+					if (iteratorProgram3 = "0111000") THEN --0110101
 						current_state <= idle;
 						inst_outS <= "0000000";
 						toPCE <= '1';
@@ -140,7 +140,7 @@ begin
 					if (stop_progS /= '0') THEN
 						iteratorProgram4 <= iteratorProgram4 + 1;
 						inst_outS <= std_logic_vector(iteratorProgram4);
-						if (iteratorProgram4 = "1110001") THEN --1110001
+						if (iteratorProgram4 = "1110010") THEN --1110001
 							current_state <= running;
 							iteratorProgram4 <= "1100000";
 							toPCE <= '1';
@@ -155,6 +155,7 @@ begin
 					currentProgram <= programIdle;
 					inst_outS <= "0000000";
 				else
+					currentProgram <= programIdle;
 					current_state <= idle;
 					inst_outS <= "0000000";
 				end if;
