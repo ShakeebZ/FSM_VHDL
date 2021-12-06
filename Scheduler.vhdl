@@ -51,8 +51,8 @@ begin
 			nextProgram <= programIdle;
 			next_state <= idle;
 		else
-			nextProgram <= currentProgram;
-			next_state <= current_state;
+			nextProgram <= programError;
+			next_state <= idle;
 		end if;
 	end PROCESS;
 
@@ -88,6 +88,9 @@ begin
 				elsif (currentProgram = programIdle) THEN
 					inst_outS <= "0000000";
 					current_state <= idle;
+				else
+						current_state <= running;
+						inst_outS <= std_logic_vector(ProgramErrorOutput);
 				end if;
 			elsif (rising_edge(CLKS) AND current_state = running) THEN -- iterates till end of instruction set for program
 				toPCE <= '0';
