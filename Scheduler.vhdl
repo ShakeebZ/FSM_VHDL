@@ -76,99 +76,101 @@ begin
 				inst_outS <= "0000000";
 				current_state <= idle;
 				currentProgram <= nextProgram;
-			elsif (rising_edge(CLKS) AND current_state = idle) THEN
-				currentProgram <= nextProgram;
-				toPCE <= '0';
-				if (currentProgram = program1) THEN
-					current_state <= next_state; --sets current state to be running / initialization
-					iteratorProgram1 <= "0000001";
-				elsif (currentProgram = program2) THEN
-					current_state <= next_state; --sets current state to be running / initialization
-					iteratorProgram2 <= "0100000";
-				elsif (currentProgram = program3) THEN
-					current_state <= next_state; --sets current state to be running / initialization
-					iteratorProgram3 <= "0101011";
-				elsif (currentProgram = program4) THEN
-					if (stop_progS /= '0') THEN
+			else
+				if (rising_edge(CLKS) AND current_state = idle) THEN
+					currentProgram <= nextProgram;
+					toPCE <= '0';
+					if (currentProgram = program1) THEN
 						current_state <= next_state; --sets current state to be running / initialization
-						iteratorProgram4 <= "1100000";
-					else
-						current_state <= idle;
-						iteratorProgram4 <= "1100000";
-						inst_outS <= "0000000";
-					end if;
-				elsif (currentProgram = programError) THEN
-						current_state <= running;
-						currentProgram <= programError;
-						inst_outS <= std_logic_vector(ProgramErrorOutput);
-				elsif (currentProgram = programIdle) THEN
-					inst_outS <= "0000000";
-					current_state <= idle;
-				else
-					currentProgram <= programError;
-					current_state <= running;
-					inst_outS <= std_logic_vector(ProgramErrorOutput);
-				end if;
-			elsif (rising_edge(CLKS) AND current_state = running) THEN -- iterates till end of instruction set for program
-				toPCE <= '0';
-				currentProgram <= nextProgram;
-				if (currentProgram = program1) THEN
-					iteratorProgram1 <= iteratorProgram1 + 1;
-					inst_outS <= std_logic_vector(iteratorProgram1);
-					if (iteratorProgram1 = "0100001") THEN -- 0111111
-						current_state <= idle;
-						inst_outS <= "0000000";
-						toPCE <= '1';
-					end if;
-				elsif (currentProgram = program2) THEN
-					iteratorProgram2 <= iteratorProgram2 + 1;
-					inst_outS <= std_logic_vector(iteratorProgram2);
-					if (iteratorProgram2 = "0101100") THEN -- 0101010
-						current_state <= idle;
-						inst_outS <= "0000000";
-						toPCE <= '1';
-					end if;
-				elsif (currentProgram = program3) THEN
-					iteratorProgram3 <= iteratorProgram3 + 1;
-					inst_outS <= std_logic_vector(iteratorProgram3);
-					if (iteratorProgram3 = "0111000") THEN --0110101
-						current_state <= idle;
-						inst_outS <= "0000000";
-						toPCE <= '1';
-					end if;
-				elsif (currentProgram = program4) THEN
-					if (stop_progS /= '0') THEN
-						iteratorProgram4 <= iteratorProgram4 + 1;
-						inst_outS <= std_logic_vector(iteratorProgram4);
-						if (iteratorProgram4 = "1110010") THEN --1110001
-							current_state <= running;
+						iteratorProgram1 <= "0000001";
+					elsif (currentProgram = program2) THEN
+						current_state <= next_state; --sets current state to be running / initialization
+						iteratorProgram2 <= "0100000";
+					elsif (currentProgram = program3) THEN
+						current_state <= next_state; --sets current state to be running / initialization
+						iteratorProgram3 <= "0101011";
+					elsif (currentProgram = program4) THEN
+						if (stop_progS /= '0') THEN
+							current_state <= next_state; --sets current state to be running / initialization
 							iteratorProgram4 <= "1100000";
+						else
+							current_state <= idle;
+							iteratorProgram4 <= "1100000";
+							inst_outS <= "0000000";
+						end if;
+					elsif (currentProgram = programError) THEN
+							current_state <= running;
+							currentProgram <= programError;
+							inst_outS <= std_logic_vector(ProgramErrorOutput);
+					elsif (currentProgram = programIdle) THEN
+						inst_outS <= "0000000";
+						current_state <= idle;
+					else
+						currentProgram <= programError;
+						current_state <= running;
+						inst_outS <= std_logic_vector(ProgramErrorOutput);
+					end if;
+				elsif (rising_edge(CLKS) AND current_state = running) THEN -- iterates till end of instruction set for program
+					toPCE <= '0';
+					currentProgram <= nextProgram;
+					if (currentProgram = program1) THEN
+						iteratorProgram1 <= iteratorProgram1 + 1;
+						inst_outS <= std_logic_vector(iteratorProgram1);
+						if (iteratorProgram1 = "0100001") THEN -- 0111111
+							current_state <= idle;
+							inst_outS <= "0000000";
 							toPCE <= '1';
 						end if;
-					else 
+					elsif (currentProgram = program2) THEN
+						iteratorProgram2 <= iteratorProgram2 + 1;
+						inst_outS <= std_logic_vector(iteratorProgram2);
+						if (iteratorProgram2 = "0101100") THEN -- 0101010
+							current_state <= idle;
+							inst_outS <= "0000000";
+							toPCE <= '1';
+						end if;
+					elsif (currentProgram = program3) THEN
+						iteratorProgram3 <= iteratorProgram3 + 1;
+						inst_outS <= std_logic_vector(iteratorProgram3);
+						if (iteratorProgram3 = "0111000") THEN --0110101
+							current_state <= idle;
+							inst_outS <= "0000000";
+							toPCE <= '1';
+						end if;
+					elsif (currentProgram = program4) THEN
+						if (stop_progS /= '0') THEN
+							iteratorProgram4 <= iteratorProgram4 + 1;
+							inst_outS <= std_logic_vector(iteratorProgram4);
+							if (iteratorProgram4 = "1110010") THEN --1110001
+								current_state <= running;
+								iteratorProgram4 <= "1100000";
+								toPCE <= '1';
+							end if;
+						else 
+							current_state <= idle;
+							iteratorProgram4 <= "1100000";
+							toPCE <= '0';
+						end if;
+					elsif (currentProgram = programError) THEN
 						current_state <= idle;
-						iteratorProgram4 <= "1100000";
-						toPCE <= '0';
+						currentProgram <= programIdle;
+						inst_outS <= "0000000";
+					else
+						currentProgram <= programIdle;
+						current_state <= idle;
+						inst_outS <= "0000000";
 					end if;
-				elsif (currentProgram = programError) THEN
-					current_state <= idle;
-					currentProgram <= programIdle;
-					inst_outS <= "0000000";
-				else
-					currentProgram <= programIdle;
-					current_state <= idle;
-					inst_outS <= "0000000";
 				end if;
 			end if;
-		else
-			toPCE <= '0';
-			iteratorProgram1 <= "0000000"; --0000001
-			iteratorProgram2 <= "0000000"; --0100000
-			iteratorProgram3 <= "0000000"; --0101011
-			iteratorProgram4 <= "0000000"; --1100000
-			inst_outS <= "0000000";
-			current_state <= idle;
-			currentProgram <= programidle;
-		end if;
-	end PROCESS;
+			else
+				toPCE <= '0';
+				iteratorProgram1 <= "0000000"; --0000001
+				iteratorProgram2 <= "0000000"; --0100000
+				iteratorProgram3 <= "0000000"; --0101011
+				iteratorProgram4 <= "0000000"; --1100000
+				inst_outS <= "0000000";
+				current_state <= idle;
+				currentProgram <= programidle;
+			end if;
+		end PROCESS;
 end architecture;
