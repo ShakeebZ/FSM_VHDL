@@ -140,7 +140,7 @@ begin
 					if (stop_progS /= '0') THEN
 						iteratorProgram4 <= iteratorProgram4 + 1;
 						inst_outS <= std_logic_vector(iteratorProgram4);
-						if (iteratorProgram4 = "1110010") THEN --1110001
+						if (iteratorProgram4 = "1110001") THEN --1110001
 							current_state <= running;
 							iteratorProgram4 <= "1100000";
 							toPCE <= '1';
@@ -152,7 +152,7 @@ begin
 					end if;
 				elsif (currentProgram = programError) THEN
 					current_state <= idle;
-					currentProgram <= programError;
+					currentProgram <= programIdle;
 					inst_outS <= "0000000";
 				else
 					current_state <= idle;
