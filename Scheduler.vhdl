@@ -105,7 +105,7 @@ begin
 				if (currentProgram = program1) THEN
 					iteratorProgram1 <= iteratorProgram1 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram1);
-					if (iteratorProgram1 = "0011111") THEN
+					if (iteratorProgram1 = "1000001") THEN -- 0111111
 						current_state <= idle;
 --						iteratorProgram1 <= "0000001";
 						inst_outS <= "0000000";
@@ -114,7 +114,7 @@ begin
 				elsif (currentProgram = program2) THEN
 					iteratorProgram2 <= iteratorProgram2 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram2);
-					if (iteratorProgram2 = "0101010") THEN
+					if (iteratorProgram2 = "0101100") THEN -- 0101010
 						current_state <= idle;
 --						iteratorProgram2 <= "0100000";
 						inst_outS <= "0000000";
@@ -123,7 +123,7 @@ begin
 				elsif (currentProgram = program3) THEN
 					iteratorProgram3 <= iteratorProgram3 + 1;
 					inst_outS <= std_logic_vector(iteratorProgram3);
-					if (iteratorProgram3 = "0110101") THEN
+					if (iteratorProgram3 = "0110111") THEN --0110101
 						current_state <= idle;
 --						iteratorProgram3 <= "0101011";
 						inst_outS <= "0000000";
@@ -133,9 +133,9 @@ begin
 					if (stop_progS /= '0') THEN
 						iteratorProgram4 <= iteratorProgram4 + 1;
 						inst_outS <= std_logic_vector(iteratorProgram4);
-						if (iteratorProgram4 = "1110001") THEN
+						if (iteratorProgram4 = "1110011") THEN --1110001
 							current_state <= running;
---							iteratorProgram4 <= "1100000";
+							iteratorProgram4 <= "1100000";
 							inst_outS <= "0000000";
 							toPCE <= '1';
 						end if;
@@ -154,10 +154,15 @@ begin
 				end if;
 			end if;
 		elsif (stop_progS = '0' AND currentProgram = program4) THEN
-			toPCE <= '0';
-			iteratorProgram4 <= "1100000";
-			current_state <= idle;
-			inst_outS <= "0000000";				
+			if (currentProgram /= program4) THEN
+				currentprogram <= nextprogram;
+				current_state <= running;
+			else
+				toPCE <= '0';
+				iteratorProgram4 <= "1100000";
+				current_state <= idle;
+				inst_outS <= "0000000";				
+			end if;
 		else
 			toPCE <= '0';
 			if (hard_resetS = '1') THEN
