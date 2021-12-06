@@ -61,10 +61,6 @@ begin
     HEX5 <= signalToHexes(5);
     HEX6 <= signalToHexes(6);
     HEX7 <= signalToHexes(7);
-
-    prescaleClock : Prescale Port Map (CLK => Clock_50, 
-                                    mode => switch_debouncedResult(4) & switch_debouncedResult(5),
-                                    clk_out =>  alteredClock);
     
     ASIP_ent : ASIP Port Map (clkASIP => alteredClock,
                             rstASIP => Key_DebouncedResult(1),
@@ -74,6 +70,15 @@ begin
                             to_hex => signalToHexes,
                             pauseButtonInputASIP => switch_debouncedResult(8),
                             pce_out => LEDG(3 downto 0));
+
+
+    Process(switch_debouncedResult(8) AND CLK_50)
+        if (switch_debouncedResult(8) = '0') THEN
+            prescaleClock : Prescale Port Map (CLK => Clock_50, 
+                                                mode => switch_debouncedResult(4) & switch_debouncedResult(5),
+                                                clk_out =>  alteredClock);
+        end if;
+    end process;
 
     debounceSwitch0 : debouncer Port Map (clk => alteredClock,--choice
         rst => SW(15),
