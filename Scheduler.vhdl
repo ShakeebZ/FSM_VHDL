@@ -75,7 +75,7 @@ begin
 				iteratorProgram3 <= "0101011"; --0101011
 				inst_outS <= "0000000";
 				current_state <= idle;
-				currentProgram <= nextProgram;
+				currentProgram <= programIdle;
 			else
 				if (rising_edge(CLKS) AND current_state = idle) THEN
 					currentProgram <= nextProgram;
@@ -116,7 +116,7 @@ begin
 					if (currentProgram = program1) THEN
 						iteratorProgram1 <= iteratorProgram1 + 1;
 						inst_outS <= std_logic_vector(iteratorProgram1);
-						if (iteratorProgram1 = "0100001") THEN -- 0111111
+						if (iteratorProgram1 = "0100000") THEN -- 0111111
 							current_state <= idle;
 							inst_outS <= "0000000";
 							toPCE <= '1';
@@ -124,7 +124,7 @@ begin
 					elsif (currentProgram = program2) THEN
 						iteratorProgram2 <= iteratorProgram2 + 1;
 						inst_outS <= std_logic_vector(iteratorProgram2);
-						if (iteratorProgram2 = "0101100") THEN -- 0101010
+						if (iteratorProgram2 = "0101010") THEN -- 0101010
 							current_state <= idle;
 							inst_outS <= "0000000";
 							toPCE <= '1';
@@ -141,7 +141,7 @@ begin
 						if (stop_progS /= '0') THEN
 							iteratorProgram4 <= iteratorProgram4 + 1;
 							inst_outS <= std_logic_vector(iteratorProgram4);
-							if (iteratorProgram4 = "1110010") THEN --1110001
+							if (iteratorProgram4 = "1110001") THEN --1110001
 								current_state <= running;
 								iteratorProgram4 <= "1100000";
 								toPCE <= '1';
