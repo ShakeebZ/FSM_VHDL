@@ -44,7 +44,7 @@ SIGNAL instSignal : std_logic_vector(6 downto 0);
 SIGNAL toSegSignal : twoDArrayCU;
 
 begin
-
+--Component Instantiations
 ControlUnitASIP : ControlUnit port map(
     clkCU => clkASIP,
     rstCU => rstASIP,

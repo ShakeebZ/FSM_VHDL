@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity debouncer is
   generic (
-    timeout_cycles : positive := 20
+    timeout_cycles : positive
     );
   port (
     clk : in std_logic;

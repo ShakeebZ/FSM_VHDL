@@ -12,6 +12,7 @@ entity PreScale is
 end PreScale;
 
 architecture rtl of PreScale is
+--Creating different clocks
 Signal CounterNormal : SIGNED(24 DOWNTO 0) := (others => '0');
 SIGNAL CounterSlow : SIGNED(25 DOWNTO 0) := (others => '0');
 SIGNAL CounterFast : Signed(23 DOWNTO 0) := (others => '0');

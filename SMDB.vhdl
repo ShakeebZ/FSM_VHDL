@@ -11,7 +11,7 @@ entity SMDB is
         key : In std_logic_vector(3 downto 0);
         HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7 : out std_logic_vector(6 downto 0);
         LEDG : out std_logic_vector(7 downto 0);
-        LEDR : out std_logic_vector(17 downto 0)
+		  LEDR : out std_logic_vector(17 DOWNTO 0)
     );
 end SMDB;
 
@@ -63,8 +63,10 @@ begin
     HEX6 <= signalToHexes(6);
     HEX7 <= signalToHexes(7);
     
+	 -- Instantiating all components.
+	 
     ASIP_ent : ASIP Port Map (clkASIP => alteredClock,
-                            rstASIP => Key_DebouncedResult(1),
+                            rstASIP => switch_debouncedResult(6),
                             hard_rstASIP => SWitch_DebouncedResult(7),
                             stop_progASIP => Key_debouncedResult(0),
                             programASIP => switch_debouncedResult(3 downto 0),
@@ -82,48 +84,48 @@ begin
 	 
 	 
 
-    debounce0 : debouncer Port Map (clk => CLOCK_50,--choice
+    deb0 : debouncer Port Map (clk => CLOCK_50,--choice
         rst => OrResult,
         switch => SW(1),
         switch_debounced => switch_debouncedResult(0));
 
-    debounce1: debouncer Port Map (clk => CLOCK_50,--choice
+    deb1: debouncer Port Map (clk => CLOCK_50,--choice
         rst => OrResult,
         switch => SW(2),
         switch_debounced => switch_debouncedResult(1));
         
-    debounce2: debouncer Port Map (clk => CLOCK_50,--choice
+    deb2: debouncer Port Map (clk => CLOCK_50,--choice
         rst => OrResult,
         switch => SW(3),
         switch_debounced => switch_debouncedResult(2));
     
-    debounce3: debouncer Port Map (clk => CLOCK_50,--choice
+    deb3: debouncer Port Map (clk => CLOCK_50,--choice
         rst => OrResult,
         switch => SW(4),
         switch_debounced => switch_debouncedResult(3));
 
-    debounce4: debouncer Port Map (clk => CLOCK_50,--speed
+    deb4: debouncer Port Map (clk => CLOCK_50,--speed
         rst => OrResult,
         switch => SW(17),
         switch_debounced => switch_debouncedResult(4));
 
-    debounce5: debouncer Port Map (clk => CLOCK_50,--speed
+    deb5: debouncer Port Map (clk => CLOCK_50,--speed
         rst => OrResult,
         switch => SW(16),
         switch_debounced => switch_debouncedResult(5));
 
-    debounce6: debouncer Port Map (clk => CLOCK_50,--soft reset
+    deb6: debouncer Port Map (clk => CLOCK_50,--soft reset
         rst => OrResult,
         switch => SW(15),
         switch_debounced => switch_debouncedResult(6));
 
-    debounce7: debouncer Port Map (clk => CLOCK_50, --hard reset
+    deb7: debouncer Port Map (clk => CLOCK_50, --hard reset
         rst => OrResult,
         switch => SW(14),
         switch_debounced => switch_debouncedResult(7));
     
     
-    debounce8: debouncer Port Map (clk => CLOCK_50, --stop program
+    deb8: debouncer Port Map (clk => CLOCK_50, --stop program
         rst => OrResult,
         switch => key(3),
         switch_debounced => key_debouncedResult(0));

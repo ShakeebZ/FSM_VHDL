@@ -20,7 +20,7 @@ architecture behaviour of PCE is
             if (hardResetPCE = '1') then
                 counter <= "0000";
             else 
-                if (rising_edge(ClkPCE) AND programPCE = '1' ) then
+                if (rising_edge(ClkPCE) AND programPCE = '1' ) then -- Increment counter on the rising edge of a clock when the program input is '1'
                     counter <= counter + 1;
                 end if;
             end if;

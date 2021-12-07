@@ -1,6 +1,10 @@
+
+--In the SchedulerTesting file we directly connect board inputs to the components
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.definitions_package.all;
 
 entity SchedulerTesting is
     port (
@@ -22,15 +26,15 @@ port (
         stop_progS : in std_logic;
         programS : in std_logic_vector(3 downto 0);
         inst_outS : out std_logic_vector(6 downto 0);
-        toPCE : out std_logic;
-        pauseButtonInputS : in std_logic
-    );
+        toPCE : out std_logic
+		  );
 end component;
 
 component PreScale is
     port (
         clk : in std_logic;
         mode : in std_logic_vector(1 DOWNTO 0);
+		  disable : in std_logic;
         clk_out : out std_logic
     );
 end component;
@@ -57,8 +61,9 @@ SIGNAL CUOutput : twoDArrayCU;
 SIGNAL Instructions : std_logic_vector(6 DOWNTO 0);
 begin
 
-    PreScalerComponent : PreScale port map(clk => CLOCK_50,
+	PreScalerComponent : PreScale port map(clk => CLOCK_50,
      mode => SW(17 DOWNTO 16),
+	  disable => SW(13),
      clk_out => PreScaledClock
     );
 
@@ -77,8 +82,7 @@ begin
         stop_progS => KEY(3),
         programS => SW(3 DOWNTO 0),
         inst_outS => Instructions,
-        toPCE => LEDR(0),
-        pauseButtonInputS => SW(13),
+        toPCE => LEDR(0)
     );
 
     Custom7SegComponent0 : Custom7Seg port map(
