@@ -36,7 +36,8 @@ COMPONENT Prescale
 END COMPONENT Prescale;
 
 COMPONENT debouncer
-    generic ( -- ask question on this
+
+    generic (
         timeout_cycles : positive := 1000
         );
     port (
