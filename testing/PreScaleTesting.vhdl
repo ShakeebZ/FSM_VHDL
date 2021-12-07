@@ -18,7 +18,7 @@ component PreScale port (
 );
 END COMPONENT;
 begin
-
+--Connecting the switches directly to the mode and the clock out port to an led to ensure correct functionality
 PreScaleTestingComponent : PreScale port map(clk => CLOCK_50, mode => SW(1 DOWNTO 0), clk_out => LEDR(0));
 
 end architecture;

@@ -8,7 +8,7 @@ entity IO_Controller is
         toSegIO : IN twoDArrayCU;
         toHexIO : OUT twoDArrayIO
     );
-end ENtity;
+end IO_Controller;
 
 architecture structure of IO_Controller is
 
@@ -18,8 +18,11 @@ architecture structure of IO_Controller is
             Y : OUT STD_LOGIC_VECTOR(6 downto 0)
         );
     end component;
+	 
 begin
-		 segDecodedGenerate : for i in 0 to 7 generate
-			  segDecoded : Custom7Seg PORT MAP(D => toSeg(i), Y => toHex(i));
-		 end generate;
+-- Translating instructions into hex readable values
+segDecodedGenerate : for i in 0 to 7 generate
+segDecoded : Custom7Seg PORT MAP(D => toSegIO(i), Y => toHexIO(i));
+end generate segDecodedGenerate;
+
 end architecture;

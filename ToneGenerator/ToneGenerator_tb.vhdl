@@ -1,3 +1,8 @@
+
+-- Testbench for ToneGenerator
+-- Our ToneGenerator does not work, when the instruction becomes the error instruction our WaveOut remains at
+-- '0' instead of briefly going to '1'
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -14,8 +19,8 @@ port (
 );
 end component;
 
-Signal instruction : SIGNED(6 DOWNTO 0);
-Signal WaveOutTest : std_logic;
+Signal instruction : SIGNED(6 DOWNTO 0) := (others => '0');
+Signal WaveOutTest : std_logic := '0';
 signal clk : std_logic := '0';
 begin
 
@@ -28,8 +33,7 @@ begin
     DUT : ToneGenerator
     port map (
         instTG => std_logic_vector(instruction),
-        WaveOut => WaveOutTest;
-        
+        WaveOut => WaveOutTest
     );
 
     SEQUENCER_PROC : process
